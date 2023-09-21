@@ -6,11 +6,22 @@ services:
     container_name: zookeeper
     ports:
       - "2181:2181"
+    networks:
+      - docker_default
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
     ports:
       - "9092:9092"
+    networks:
+      - docker_default
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ADVERTISED_HOST_NAME: 172.17.0.1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - ./server.properties:/etc/kafka/server.properties
+networks:
+  docker_default:
+    driver: bridge
+    name: docker_default
+    external: true
